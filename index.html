@@ -107,10 +107,13 @@
       height: 56px;
       border-radius: 14px;
       flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
+      overflow: hidden;
+    }
+
+    .app-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .app-name {
@@ -218,7 +221,7 @@
 
       <div class="app-card">
         <div class="app-header">
-          <div class="app-icon" style="background: linear-gradient(135deg, #1c1c2e, #3b3b5c);">📷</div>
+          <div class="app-icon"><img src="icons/bepoliteanytime.png" alt="禮貌相機" /></div>
           <div>
             <div class="app-name">禮貌相機</div>
             <div class="app-sub">Be Polite Camera</div>
@@ -236,7 +239,7 @@
 
       <div class="app-card">
         <div class="app-header">
-          <div class="app-icon" style="background: linear-gradient(135deg, #0d1117, #1f2937);">🔊</div>
+          <div class="app-icon"><img src="icons/reverseaudio.png" alt="KAEPS" /></div>
           <div>
             <div class="app-name">KAEPS・說反了</div>
             <div class="app-sub">Reverse Audio Practice</div>
@@ -254,7 +257,7 @@
 
       <div class="app-card">
         <div class="app-header">
-          <div class="app-icon" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">🏆</div>
+          <div class="app-icon"><img src="icons/mytiertool.png" alt="TierCraft" /></div>
           <div>
             <div class="app-name">TierCraft</div>
             <div class="app-sub">圖片排行榜製作</div>
@@ -272,7 +275,7 @@
 
       <div class="app-card">
         <div class="app-header">
-          <div class="app-icon" style="background: linear-gradient(135deg, #0f2027, #203a43);">🌙</div>
+          <div class="app-icon"><img src="icons/areyouawake.png" alt="醒了嗎" /></div>
           <div>
             <div class="app-name">醒了嗎</div>
             <div class="app-sub">Are You Awake?</div>
@@ -299,7 +302,7 @@
 
       <div class="app-card">
         <div class="app-header">
-          <div class="app-icon" style="background: linear-gradient(135deg, #7f1d1d, #991b1b);">🀄</div>
+          <div class="app-icon"><img src="icons/inbetween.png" alt="射龍門" /></div>
           <div>
             <div class="app-name">射龍門</div>
             <div class="app-sub">春節經典牌局</div>
@@ -317,7 +320,7 @@
 
       <div class="app-card">
         <div class="app-header">
-          <div class="app-icon" style="background: linear-gradient(135deg, #78350f, #92400e);">🐉</div>
+          <div class="app-icon"><img src="icons/dragon.png" alt="射龍門算牌器" /></div>
           <div>
             <div class="app-name">射龍門算牌器</div>
             <div class="app-sub">Dragon Door Calculator</div>
@@ -335,7 +338,7 @@
 
       <div class="app-card">
         <div class="app-header">
-          <div class="app-icon" style="background: linear-gradient(135deg, #1e3a5f, #1e40af);">🃏</div>
+          <div class="app-icon"><img src="icons/tenhalf.png" alt="十點半算牌器" /></div>
           <div>
             <div class="app-name">十點半算牌器</div>
             <div class="app-sub">Ten-Half Calculator</div>
