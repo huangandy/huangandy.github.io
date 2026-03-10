@@ -3,362 +3,639 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HuangAndy Apps</title>
+  <title>HuangAndy — iOS Apps</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
     :root {
-      --bg: #0f0f13;
-      --surface: #1a1a22;
-      --border: #2a2a38;
-      --text: #f0f0f5;
-      --muted: #888899;
-      --accent: #6c63ff;
+      --bg: #060608;
+      --surface: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --text: #f5f5f7;
+      --muted: rgba(255,255,255,0.4);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html { scroll-behavior: smooth; }
+
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
-      min-height: 100vh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
     }
 
-    /* Hero */
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Ambient blobs ── */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.15;
+      pointer-events: none;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .blob-1 { width: 600px; height: 600px; background: #7c3aed; top: -200px; left: -150px; animation-delay: 0s; }
+    .blob-2 { width: 500px; height: 500px; background: #db2777; top: 30%; right: -200px; animation-delay: -6s; }
+    .blob-3 { width: 400px; height: 400px; background: #0891b2; bottom: 10%; left: 20%; animation-delay: -12s; }
+
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(40px, 60px) scale(1.08); }
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 18px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      background: rgba(6,6,8,0.7);
+    }
+
+    .nav-logo {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #7c3aed;
+      box-shadow: 0 0 12px #7c3aed;
+    }
+
+    .nav-link {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--text); }
+
+    /* ── Hero ── */
     .hero {
-      text-align: center;
-      padding: 80px 24px 60px;
-      background: radial-gradient(ellipse at 50% 0%, #1e1b4b 0%, transparent 70%);
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 48px 80px;
+      max-width: 1100px;
     }
 
-    .hero-avatar {
-      width: 72px;
-      height: 72px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+    .hero-eyebrow {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      margin-bottom: 20px;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #a78bfa;
+      margin-bottom: 28px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 24px; height: 1px;
+      background: #a78bfa;
     }
 
     .hero h1 {
-      font-size: clamp(28px, 5vw, 48px);
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      margin-bottom: 12px;
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -3px;
+      margin-bottom: 32px;
     }
 
-    .hero p {
+    .hero h1 .line-gradient {
+      background: linear-gradient(135deg, #a78bfa 0%, #f472b6 50%, #fb923c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 18px;
       color: var(--muted);
-      font-size: 17px;
       max-width: 480px;
-      margin: 0 auto;
-      line-height: 1.6;
+      line-height: 1.7;
+      margin-bottom: 48px;
     }
 
-    /* Section */
-    .section {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
-
-    .section-title {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
-
-    /* App Grid */
-    .app-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
-    }
-
-    .app-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 24px;
+    .hero-stats {
       display: flex;
-      flex-direction: column;
-      gap: 12px;
-      transition: transform 0.2s, border-color 0.2s;
+      gap: 48px;
     }
 
-    .app-card:hover {
-      transform: translateY(-3px);
-      border-color: #444;
+    .stat-num {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1px;
     }
 
-    .app-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .app-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-
-    .app-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .app-name {
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 1.3;
-    }
-
-    .app-sub {
+    .stat-label {
       font-size: 12px;
       color: var(--muted);
       margin-top: 2px;
     }
 
-    .app-desc {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.6;
-      flex: 1;
-    }
-
-    .app-footer {
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 48px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 8px;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
-    .tag {
+    .scroll-line {
+      width: 32px; height: 1px;
+      background: var(--muted);
+    }
+
+    /* ── Section ── */
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 0 48px 120px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-num {
       font-size: 11px;
       font-weight: 600;
       color: var(--muted);
-      background: var(--border);
-      padding: 4px 10px;
-      border-radius: 20px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
 
-    .dl-btn {
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    /* ── App Grid ── */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    /* Featured card (wide) */
+    .app-card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), border-color 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .app-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 0%, rgba(255,255,255,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .app-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .app-card:hover .app-glow {
+      opacity: 1;
+    }
+
+    .app-glow {
+      position: absolute;
+      inset: -1px;
+      border-radius: 24px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Span variants */
+    .span-4  { grid-column: span 4; }
+    .span-5  { grid-column: span 5; }
+    .span-6  { grid-column: span 6; }
+    .span-7  { grid-column: span 7; }
+    .span-8  { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    /* App icon */
+    .app-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      flex-shrink: 0;
+    }
+
+    .app-icon-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    /* Horizontal layout for wide cards */
+    .app-card.layout-h {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 28px;
+    }
+
+    .app-card.layout-h .app-icon-wrap {
+      margin-bottom: 0;
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+    }
+
+    .app-card.layout-h .app-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .app-body { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+
+    .app-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .app-name {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    .app-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .app-desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.65;
+      margin-top: 4px;
+      flex: 1;
+    }
+
+    .app-dl {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #fff;
-      color: #000;
+      margin-top: 20px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text);
       text-decoration: none;
       font-size: 12px;
       font-weight: 700;
-      padding: 8px 14px;
-      border-radius: 20px;
-      white-space: nowrap;
-      transition: opacity 0.2s;
+      padding: 9px 16px;
+      border-radius: 50px;
+      width: fit-content;
+      transition: background 0.2s, border-color 0.2s;
+      backdrop-filter: blur(10px);
     }
 
-    .dl-btn:hover { opacity: 0.85; }
+    .app-dl:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.25);
+    }
 
-    .dl-btn svg { flex-shrink: 0; }
+    /* Big number accent */
+    .card-number {
+      position: absolute;
+      bottom: -10px;
+      right: 16px;
+      font-size: 120px;
+      font-weight: 900;
+      letter-spacing: -6px;
+      color: rgba(255,255,255,0.03);
+      pointer-events: none;
+      line-height: 1;
+    }
 
-    /* Category label */
-    .category-row {
-      display: flex;
+    /* Category divider */
+    .category-label {
+      display: inline-flex;
       align-items: center;
       gap: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
       margin-bottom: 20px;
-      margin-top: 40px;
+      margin-top: 8px;
     }
 
-    .category-row:first-child { margin-top: 0; }
+    .category-label::after {
+      content: '';
+      display: block;
+      width: 32px; height: 1px;
+      background: var(--muted);
+    }
 
-    .category-label {
-      font-size: 20px;
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 48px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-left {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .footer-left strong {
+      color: var(--text);
       font-weight: 700;
     }
 
-    .category-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .hero { padding: 100px 24px 80px; }
+      .section { padding: 0 24px 80px; }
+      footer { padding: 32px 24px; flex-direction: column; gap: 16px; align-items: flex-start; }
 
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 32px 24px;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 13px;
+      .span-4, .span-5, .span-6, .span-7, .span-8 { grid-column: span 12; }
+      .app-card.layout-h { flex-direction: column; }
+      .app-card.layout-h .app-icon-wrap { width: 64px; height: 64px; }
+      .hero-stats { gap: 32px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Ambient -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-dot"></div>
+      HuangAndy
+    </div>
+    <a class="nav-link" href="#apps">Apps</a>
+  </nav>
+
+  <!-- Hero -->
   <section class="hero">
-    <div class="hero-avatar">👨‍💻</div>
-    <h1>HuangAndy</h1>
-    <p>為日常生活打造有趣又實用的 iOS App</p>
+    <div class="hero-eyebrow">iOS Developer</div>
+    <h1>
+      Making apps<br>
+      <span class="line-gradient">you actually use.</span>
+    </h1>
+    <p class="hero-sub">為日常生活打造有趣又實用的 iOS App。從牌局計算到睡眠追蹤，每個 App 都在解決真實問題。</p>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">7</div>
+        <div class="stat-label">Apps on the Store</div>
+      </div>
+      <div>
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Swift / SwiftUI</div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Scroll to explore
+    </div>
   </section>
 
-  <div class="section">
+  <!-- Apps -->
+  <div class="section" id="apps">
 
-    <!-- 生活工具 -->
-    <div class="category-row">
-      <span class="category-label">生活工具</span>
-      <div class="category-line"></div>
+    <div class="section-header">
+      <div>
+        <div class="section-num">01 — Portfolio</div>
+        <h2 class="section-title">All Apps</h2>
+      </div>
     </div>
+
+    <!-- Row 1 -->
+    <div class="category-label">生活工具</div>
+    <div class="app-grid" style="margin-bottom: 16px;">
+
+      <!-- 禮貌相機 — wide -->
+      <a class="app-card layout-h span-7" href="https://apps.apple.com/tw/app/%E7%A6%AE%E8%B2%8C%E7%9B%B8%E6%A9%9F-%E6%88%91%E5%B0%B1%E5%95%8F-%E4%BD%A0%E7%A6%AE%E8%B2%8C%E5%97%8E/id6760216483" target="_blank">
+        <div class="app-glow" style="background: radial-gradient(circle at 0% 50%, #7c3aed33, transparent 60%)"></div>
+        <div class="app-icon-wrap">
+          <img src="icons/bepoliteanytime.png" alt="禮貌相機" />
+        </div>
+        <div class="app-body">
+          <div class="app-tag">相機</div>
+          <div class="app-name">禮貌相機</div>
+          <div class="app-sub">Be Polite Camera</div>
+          <div class="app-desc">自動偵測中指手勢，即時馬賽克遮蔽。拍下每個禮貌的瞬間，不讓不雅手勢破壞你的照片。</div>
+          <div class="app-dl">
+            <svg width="11" height="13" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
+            Download on App Store
+          </div>
+        </div>
+        <div class="card-number">01</div>
+      </a>
+
+      <!-- KAEPS -->
+      <a class="app-card span-5" href="https://apps.apple.com/tw/app/kaeps-%E8%AA%AA%E5%8F%8D%E4%BA%86-%E5%8F%8D%E5%90%91%E7%99%BC%E9%9F%B3%E7%B7%B4%E7%BF%92-%E8%AE%93%E4%BD%A0%E8%87%AA%E4%BF%A1%E9%96%8B%E5%8F%A3-%E8%AA%AA-%E5%8F%8D%E8%A9%B1/id6759491386" target="_blank">
+        <div class="app-glow" style="background: radial-gradient(circle at 50% 0%, #db277733, transparent 60%)"></div>
+        <div class="app-icon-wrap">
+          <img src="icons/reverseaudio.png" alt="KAEPS" />
+        </div>
+        <div class="app-body">
+          <div class="app-tag">語言學習</div>
+          <div class="app-name">KAEPS・說反了</div>
+          <div class="app-sub">Reverse Audio Practice</div>
+          <div class="app-desc">反向播放你的聲音，練習反向發音，突破語言學習盲點。</div>
+          <div class="app-dl">
+            <svg width="11" height="13" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
+            App Store
+          </div>
+        </div>
+        <div class="card-number">02</div>
+      </a>
+
+    </div>
+
+    <!-- Row 2 -->
+    <div class="app-grid" style="margin-bottom: 60px;">
+
+      <!-- TierCraft -->
+      <a class="app-card span-5" href="https://apps.apple.com/tw/app/tiercraft-%E5%9C%96%E7%89%87%E6%8E%92%E8%A1%8C%E6%A6%9C%E8%A3%BD%E4%BD%9C/id6760035787" target="_blank">
+        <div class="app-glow" style="background: radial-gradient(circle at 50% 0%, #f59e0b33, transparent 60%)"></div>
+        <div class="app-icon-wrap">
+          <img src="icons/mytiertool.png" alt="TierCraft" />
+        </div>
+        <div class="app-body">
+          <div class="app-tag">生產力</div>
+          <div class="app-name">TierCraft</div>
+          <div class="app-sub">圖片排行榜製作</div>
+          <div class="app-desc">輕鬆製作屬於你的 Tier List，上傳圖片、拖拉排序。</div>
+          <div class="app-dl">
+            <svg width="11" height="13" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
+            App Store
+          </div>
+        </div>
+        <div class="card-number">03</div>
+      </a>
+
+      <!-- 醒了嗎 — wide -->
+      <a class="app-card layout-h span-7" href="https://apps.apple.com/tw/app/%E9%86%92%E4%BA%86%E5%97%8E-%E8%A8%98%E9%8C%84%E4%BD%A0%E7%9A%84%E7%9D%A1%E7%9C%A0-%E6%89%BE%E5%9B%9E%E7%94%9F%E6%B4%BB%E7%AF%80%E5%A5%8F/id6760171154" target="_blank">
+        <div class="app-glow" style="background: radial-gradient(circle at 0% 50%, #0891b233, transparent 60%)"></div>
+        <div class="app-icon-wrap">
+          <img src="icons/areyouawake.png" alt="醒了嗎" />
+        </div>
+        <div class="app-body">
+          <div class="app-tag">健康</div>
+          <div class="app-name">醒了嗎</div>
+          <div class="app-sub">Are You Awake?</div>
+          <div class="app-desc">記錄你的睡眠節奏，找回生活規律。支援 Widget 快速查看，讓每天都有好的開始。</div>
+          <div class="app-dl">
+            <svg width="11" height="13" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
+            Download on App Store
+          </div>
+        </div>
+        <div class="card-number">04</div>
+      </a>
+
+    </div>
+
+    <!-- 春節系列 -->
+    <div class="category-label">春節牌局系列</div>
     <div class="app-grid">
 
-      <div class="app-card">
-        <div class="app-header">
-          <div class="app-icon"><img src="icons/bepoliteanytime.png" alt="禮貌相機" /></div>
-          <div>
-            <div class="app-name">禮貌相機</div>
-            <div class="app-sub">Be Polite Camera</div>
+      <!-- 射龍門 — full width -->
+      <a class="app-card layout-h span-12" href="https://apps.apple.com/tw/app/%E5%B0%84%E9%BE%8D%E9%96%80-%E5%B0%87%E6%98%A5%E7%AF%80%E7%B6%93%E5%85%B8%E7%89%8C%E5%B1%80%E5%B8%B6%E5%88%B0%E6%89%8B%E6%A9%9F%E4%B8%8A-%E9%9A%A8%E6%99%82%E9%9A%A8%E5%9C%B0%E9%83%BD%E5%8F%AF%E4%BB%A5%E4%BE%86%E4%B8%80%E5%A0%B4/id6759760712" target="_blank" style="padding: 36px 40px;">
+        <div class="app-glow" style="background: radial-gradient(circle at 0% 50%, #dc262633, transparent 50%)"></div>
+        <div class="app-icon-wrap" style="width:88px;height:88px;border-radius:22px;">
+          <img src="icons/inbetween.png" alt="射龍門" />
+        </div>
+        <div class="app-body">
+          <div class="app-tag">牌局遊戲</div>
+          <div class="app-name" style="font-size:26px;">射龍門</div>
+          <div class="app-sub">Dragon Door — 春節經典牌局</div>
+          <div class="app-desc" style="max-width:560px;">將春節經典牌局帶到手機上，隨時隨地都可以來一場。支援多副牌局設定，過年聚會不無聊。</div>
+          <div class="app-dl">
+            <svg width="11" height="13" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
+            Download on App Store
           </div>
         </div>
-        <div class="app-desc">自動偵測中指手勢，即時馬賽克遮蔽。拍下每個禮貌的瞬間，不讓不雅手勢破壞照片。</div>
-        <div class="app-footer">
-          <span class="tag">相機</span>
-          <a class="dl-btn" href="https://apps.apple.com/tw/app/%E7%A6%AE%E8%B2%8C%E7%9B%B8%E6%A9%9F-%E6%88%91%E5%B0%B1%E5%95%8F-%E4%BD%A0%E7%A6%AE%E8%B2%8C%E5%97%8E/id6760216483" target="_blank">
-            <svg width="12" height="14" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
-            App Store
-          </a>
-        </div>
-      </div>
+        <div class="card-number" style="font-size:160px;">05</div>
+      </a>
 
-      <div class="app-card">
-        <div class="app-header">
-          <div class="app-icon"><img src="icons/reverseaudio.png" alt="KAEPS" /></div>
-          <div>
-            <div class="app-name">KAEPS・說反了</div>
-            <div class="app-sub">Reverse Audio Practice</div>
+      <!-- 射龍門算牌器 -->
+      <a class="app-card span-6" href="https://apps.apple.com/tw/app/%E5%B0%84%E9%BE%8D%E9%96%80%E7%AE%97%E7%89%8C%E5%99%A8/id6759181415" target="_blank">
+        <div class="app-glow" style="background: radial-gradient(circle at 50% 0%, #92400e44, transparent 60%)"></div>
+        <div class="app-icon-wrap">
+          <img src="icons/dragon.png" alt="射龍門算牌器" />
+        </div>
+        <div class="app-body">
+          <div class="app-tag">算牌工具</div>
+          <div class="app-name">射龍門算牌器</div>
+          <div class="app-sub">Dragon Door Calculator</div>
+          <div class="app-desc">即時計算剩餘牌型機率，讓你下注更有根據。</div>
+          <div class="app-dl">
+            <svg width="11" height="13" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
+            App Store
           </div>
         </div>
-        <div class="app-desc">反向播放你的聲音，練習反向發音。讓你自信開口說，突破語言學習的盲點。</div>
-        <div class="app-footer">
-          <span class="tag">語言學習</span>
-          <a class="dl-btn" href="https://apps.apple.com/tw/app/kaeps-%E8%AA%AA%E5%8F%8D%E4%BA%86-%E5%8F%8D%E5%90%91%E7%99%BC%E9%9F%B3%E7%B7%B4%E7%BF%92-%E8%AE%93%E4%BD%A0%E8%87%AA%E4%BF%A1%E9%96%8B%E5%8F%A3-%E8%AA%AA-%E5%8F%8D%E8%A9%B1/id6759491386" target="_blank">
-            <svg width="12" height="14" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
-            App Store
-          </a>
-        </div>
-      </div>
+        <div class="card-number">06</div>
+      </a>
 
-      <div class="app-card">
-        <div class="app-header">
-          <div class="app-icon"><img src="icons/mytiertool.png" alt="TierCraft" /></div>
-          <div>
-            <div class="app-name">TierCraft</div>
-            <div class="app-sub">圖片排行榜製作</div>
+      <!-- 十點半算牌器 -->
+      <a class="app-card span-6" href="https://apps.apple.com/tw/app/%E5%8D%81%E9%BB%9E%E5%8D%8A%E7%AE%97%E7%89%8C%E5%99%A8/id6759326952" target="_blank">
+        <div class="app-glow" style="background: radial-gradient(circle at 50% 0%, #1e40af44, transparent 60%)"></div>
+        <div class="app-icon-wrap">
+          <img src="icons/tenhalf.png" alt="十點半算牌器" />
+        </div>
+        <div class="app-body">
+          <div class="app-tag">算牌工具</div>
+          <div class="app-name">十點半算牌器</div>
+          <div class="app-sub">Ten-Half Calculator</div>
+          <div class="app-desc">即時統計已出牌，快速掌握勝率，過年贏更多。</div>
+          <div class="app-dl">
+            <svg width="11" height="13" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
+            App Store
           </div>
         </div>
-        <div class="app-desc">輕鬆製作屬於你的 Tier List。上傳圖片、拖拉排序，打造個人化的排行榜。</div>
-        <div class="app-footer">
-          <span class="tag">生產力</span>
-          <a class="dl-btn" href="https://apps.apple.com/tw/app/tiercraft-%E5%9C%96%E7%89%87%E6%8E%92%E8%A1%8C%E6%A6%9C%E8%A3%BD%E4%BD%9C/id6760035787" target="_blank">
-            <svg width="12" height="14" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
-            App Store
-          </a>
-        </div>
-      </div>
-
-      <div class="app-card">
-        <div class="app-header">
-          <div class="app-icon"><img src="icons/areyouawake.png" alt="醒了嗎" /></div>
-          <div>
-            <div class="app-name">醒了嗎</div>
-            <div class="app-sub">Are You Awake?</div>
-          </div>
-        </div>
-        <div class="app-desc">記錄你的睡眠節奏，找回生活規律。支援 Widget 快速查看，讓每天都有好的開始。</div>
-        <div class="app-footer">
-          <span class="tag">健康</span>
-          <a class="dl-btn" href="https://apps.apple.com/tw/app/%E9%86%92%E4%BA%86%E5%97%8E-%E8%A8%98%E9%8C%84%E4%BD%A0%E7%9A%84%E7%9D%A1%E7%9C%A0-%E6%89%BE%E5%9B%9E%E7%94%9F%E6%B4%BB%E7%AF%80%E5%A5%8F/id6760171154" target="_blank">
-            <svg width="12" height="14" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
-            App Store
-          </a>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- 春節牌局 -->
-    <div class="category-row">
-      <span class="category-label">春節牌局系列</span>
-      <div class="category-line"></div>
-    </div>
-    <div class="app-grid">
-
-      <div class="app-card">
-        <div class="app-header">
-          <div class="app-icon"><img src="icons/inbetween.png" alt="射龍門" /></div>
-          <div>
-            <div class="app-name">射龍門</div>
-            <div class="app-sub">春節經典牌局</div>
-          </div>
-        </div>
-        <div class="app-desc">將春節經典牌局帶到手機上，隨時隨地都可以來一場。支援多副牌局，過年不無聊。</div>
-        <div class="app-footer">
-          <span class="tag">牌局遊戲</span>
-          <a class="dl-btn" href="https://apps.apple.com/tw/app/%E5%B0%84%E9%BE%8D%E9%96%80-%E5%B0%87%E6%98%A5%E7%AF%80%E7%B6%93%E5%85%B8%E7%89%8C%E5%B1%80%E5%B8%B6%E5%88%B0%E6%89%8B%E6%A9%9F%E4%B8%8A-%E9%9A%A8%E6%99%82%E9%9A%A8%E5%9C%B0%E9%83%BD%E5%8F%AF%E4%BB%A5%E4%BE%86%E4%B8%80%E5%A0%B4/id6759760712" target="_blank">
-            <svg width="12" height="14" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
-            App Store
-          </a>
-        </div>
-      </div>
-
-      <div class="app-card">
-        <div class="app-header">
-          <div class="app-icon"><img src="icons/dragon.png" alt="射龍門算牌器" /></div>
-          <div>
-            <div class="app-name">射龍門算牌器</div>
-            <div class="app-sub">Dragon Door Calculator</div>
-          </div>
-        </div>
-        <div class="app-desc">射龍門專用算牌輔助工具，即時計算剩餘牌型機率，讓你下注更有根據。</div>
-        <div class="app-footer">
-          <span class="tag">算牌工具</span>
-          <a class="dl-btn" href="https://apps.apple.com/tw/app/%E5%B0%84%E9%BE%8D%E9%96%80%E7%AE%97%E7%89%8C%E5%99%A8/id6759181415" target="_blank">
-            <svg width="12" height="14" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
-            App Store
-          </a>
-        </div>
-      </div>
-
-      <div class="app-card">
-        <div class="app-header">
-          <div class="app-icon"><img src="icons/tenhalf.png" alt="十點半算牌器" /></div>
-          <div>
-            <div class="app-name">十點半算牌器</div>
-            <div class="app-sub">Ten-Half Calculator</div>
-          </div>
-        </div>
-        <div class="app-desc">十點半專用算牌輔助工具，即時統計已出牌，快速掌握勝率，過年贏更多。</div>
-        <div class="app-footer">
-          <span class="tag">算牌工具</span>
-          <a class="dl-btn" href="https://apps.apple.com/tw/app/%E5%8D%81%E9%BB%9E%E5%8D%8A%E7%AE%97%E7%89%8C%E5%99%A8/id6759326952" target="_blank">
-            <svg width="12" height="14" viewBox="0 0 14 17" fill="currentColor"><path d="M13.07 11.55c-.32.72-.47 1.04-.87 1.68-.57.86-1.37 1.93-2.36 1.94-.88.01-1.1-.57-2.29-.56-1.19.01-1.43.58-2.31.57-1-.01-1.75-0.98-2.32-1.84C1.05 11.2.5 8.35 1.46 6.6c.68-1.23 1.95-1.95 3.14-1.95 1.17 0 1.9.57 2.86.57.94 0 1.51-.57 2.86-.57 1.07 0 2.2.58 2.88 1.58a3.62 3.62 0 0 0-1.13 4.72zM9.37 3.02C9.89 2.35 10.28 1.4 10.14.5c-.8.05-1.74.54-2.29 1.23-.5.63-.93 1.6-.77 2.52.88.03 1.79-.47 2.29-1.23z"/></svg>
-            App Store
-          </a>
-        </div>
-      </div>
+        <div class="card-number">07</div>
+      </a>
 
     </div>
   </div>
 
   <footer>
-    © 2026 HuangAndy · 用心打造每個 App
+    <div class="footer-left">
+      © 2026 <strong>HuangAndy</strong> — 用心打造每個 App
+    </div>
   </footer>
 
 </body>
